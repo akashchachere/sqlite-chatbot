@@ -8,7 +8,7 @@ This project is a Python-based chatbot that interacts with an SQLite database to
 - It returns clear and formatted responses.
 
 ## Installation & Running Locally
-1. Clone this repository: git clone https://github.com/your-repo/sqlite-chatbot.git
+1. Clone this repository: git clone https://github.com/akashchachere/sqlite-chatbot.git
    cd sqlite-chatbot
 2. Install dependencies: pip install sqlite3
 3. Set up the database: python setup_db.py
