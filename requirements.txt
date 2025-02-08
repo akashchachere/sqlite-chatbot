@@ -1,3 +1,1 @@
-sqlite3==3.39.4  # SQLite (built into Python, version included for reference)
-openai==1.3.5  # If using OpenAI for NLP (optional)
-nltk==3.8.1  # If using Natural Language Processing (optional)
+
