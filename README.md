@@ -22,4 +22,12 @@ You: Who is the manager of the Engineering department?
 Chatbot: [('Bob',)]
 You: Bye
 Chatbot: Goodbye!
+## Output
 
+1. Database Schemas
+   
+![Image](https://github.com/user-attachments/assets/a001c440-991c-41c5-bded-7d3435c638bb)
+
+2. Query Output
+
+![Image](https://github.com/user-attachments/assets/105c30dd-2b17-4aed-8e66-adb8f9a7aa26)
