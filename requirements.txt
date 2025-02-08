@@ -1,3 +1,2 @@
 flask
-gunicorn
-sqlite3  # (You can remove this because SQLite is built into Python)
+sqlite3  
