@@ -1,16 +1,13 @@
 from flask import Flask, request, jsonify, render_template
 import sqlite3
 import re
-import os 
 
 app = Flask(__name__)
 
 
 # Function to create a database connection
 def create_connection():
-    db_path = os.path.join(os.path.dirname(__file__), "company.db")
-    return sqlite3.connect(db_path)
-    #return sqlite3.connect("https://github.com//akashchachere//sqlite-chatbot//blob//main//company.db")
+    return sqlite3.connect("company.db")
 
 
 # Function to convert natural language queries into SQL
@@ -47,9 +44,6 @@ def process_query(user_input):
 @app.route("/")
 def index():
     return render_template("index.html")
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))  # Use Render's PORT or fallback to 10000
-    app.run(host="0.0.0.0", port=port, debug=False)
 
 
 @app.route("/query", methods=["POST"])
@@ -70,7 +64,7 @@ def query():
         if not results:
             response = "No results found."
         else:
-            response = "\n".join([" ".join(map(str, row)) for row in results])  # Removes quotes and separators
+            response = [dict(zip(column_names, row)) for row in results]
 
         return jsonify({"response": response})
 
@@ -79,6 +73,7 @@ def query():
 
     finally:
         conn.close()
+
 
 if __name__ == "__main__":
     app.run(debug=True)
