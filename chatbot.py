@@ -1,6 +1,11 @@
+from flask import Flask, request, jsonify, render_template
 import sqlite3
 import re
 
+app = Flask(__name__)
+
+
+# Function to create a database connection
 def create_connection():
     return sqlite3.connect("company.db")
 
@@ -13,56 +18,61 @@ def process_query(user_input):
     match = re.search(r"all employees in the (\w+) department", user_input)
     if match:
         department = match.group(1).capitalize()
-        return f"SELECT * FROM Employees WHERE Department='{department}';"
+        return "SELECT * FROM Employees WHERE Department=?", (department,)
 
     # Query to get the manager of a department
     match = re.search(r"manager of the (\w+) department", user_input)
     if match:
         department = match.group(1).capitalize()
-        return f"SELECT Manager FROM Departments WHERE Name='{department}';"
+        return "SELECT Manager FROM Departments WHERE Name=?", (department,)
 
     # Query to list employees hired after a date
     match = re.search(r"employees hired after (\d{4}-\d{2}-\d{2})", user_input)
     if match:
         date = match.group(1)
-        return f"SELECT * FROM Employees WHERE Hire_Date > '{date}';"
+        return "SELECT * FROM Employees WHERE Hire_Date > ?", (date,)
 
     # Query to get total salary expense for a department
     match = re.search(r"total salary expense for the (\w+) department", user_input)
     if match:
         department = match.group(1).capitalize()
-        return f"SELECT SUM(Salary) FROM Employees WHERE Department='{department}';"
+        return "SELECT SUM(Salary) FROM Employees WHERE Department=?", (department,)
 
-    return None
+    return None, None
 
 
-def chat_bot():
-    print("Hello! I am your SQLite chat assistant. Ask me about employees and departments.")
-    while True:
-        user_input = input("You: ")
-        if user_input.lower() in ["exit", "quit", "bye"]:
-            print("Chatbot: Goodbye!")
-            break
+@app.route("/")
+def index():
+    return render_template("index.html")
 
-        sql_query = process_query(user_input)
-        if not sql_query:
-            print("Chatbot: Sorry, I couldn't understand that query.")
-            continue
 
-        conn = create_connection()
-        cursor = conn.cursor()
-        try:
-            cursor.execute(sql_query)
-            results = cursor.fetchall()
-            if not results:
-                print("Chatbot: No results found.")
-            else:
-                print("Chatbot:", results)
-        except sqlite3.Error as e:
-            print("Chatbot: Error -", str(e))
-        finally:
-            conn.close()
+@app.route("/query", methods=["POST"])
+def query():
+    user_input = request.json.get("message")
+    sql_query, params = process_query(user_input)
 
+    if not sql_query:
+        return jsonify({"response": "Sorry, I couldn't understand that query."})
+
+    conn = create_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(sql_query, params)
+        results = cursor.fetchall()
+        column_names = [desc[0] for desc in cursor.description]
+
+        if not results:
+            response = "No results found."
+        else:
+            response = "\n".join([" ".join(map(str, row)) for row in results])  # Removes quotes and separators
+
+        return jsonify({"response": response})
+
+    except sqlite3.Error as e:
+        return jsonify({"response": f"Error: {str(e)}"})
+
+    finally:
+        conn.close()
 
 if __name__ == "__main__":
-    chat_bot()
+    app.run(debug=True)
