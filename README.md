@@ -30,4 +30,4 @@ Chatbot: Goodbye!
 
 2. Query Output
 
-![Image](https://github.com/user-attachments/assets/105c30dd-2b17-4aed-8e66-adb8f9a7aa26)
+![Image](https://github.com/user-attachments/assets/ccd6b2b2-cbe8-40ab-b206-07a98732bfa2)
