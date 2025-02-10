@@ -45,6 +45,8 @@ def process_query(user_input):
 @app.route("/")
 def index():
     return render_template("index.html")
+    port = int(os.environ.get("PORT", 5000))  # Use Render's dynamic port
+    app.run(host="0.0.0.0", port=port, debug=False)  # Bind to 0.0.0.0
 
 
 @app.route("/query", methods=["POST"])
@@ -78,5 +80,4 @@ def query():
 
 if __name__ == "__main__":
     app.run(debug=True)
-    port = int(os.environ.get("PORT", 5000))  # Use Render's dynamic port
-    app.run(host="0.0.0.0", port=port, debug=False)  # Bind to 0.0.0.0
+    
