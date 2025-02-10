@@ -8,7 +8,9 @@ app = Flask(__name__)
 
 # Function to create a database connection
 def create_connection():
-    return sqlite3.connect("https://github.com//akashchachere//sqlite-chatbot//blob//main//company.db")
+    db_path = os.path.join(os.path.dirname(__file__), "company.db")
+    return sqlite3.connect(db_path)
+    #return sqlite3.connect("https://github.com//akashchachere//sqlite-chatbot//blob//main//company.db")
 
 
 # Function to convert natural language queries into SQL
